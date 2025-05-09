@@ -1,7 +1,9 @@
 from django.shortcuts import render
+from django.http import Http404
 
-# Create your views here.
-posts = [
+from typing import List, Dict, Union
+
+posts: List[Dict[str, Union[int, str]]] = [
     {
         'id': 0,
         'location': 'Остров отчаянья',
@@ -44,13 +46,21 @@ posts = [
     },
 ]
 
+context = {post_data['id']: post_data for post_data in posts}
+
 
 def index(request):
-    return render(request, 'blog/index.html', {'post_list': posts})
+    return render(request, 'blog/index.html', {'context': context})
 
 
-def post_detail(request, id):
-    return render(request, 'blog/detail.html', {'post': posts[id]})
+def post_detail(request, post_id):
+    if post_id not in context:
+        raise Http404('Такого поста не существует =(')
+    return render(
+        request,
+        'blog/detail.html',
+        {'post': context.get(post_id)}
+    )
 
 
 def category_posts(request, category_slug):
