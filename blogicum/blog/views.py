@@ -1,7 +1,8 @@
+from typing import List, Dict, Union
+
 from django.shortcuts import render
 from django.http import Http404
 
-from typing import List, Dict, Union
 
 posts: List[Dict[str, Union[int, str]]] = [
     {
